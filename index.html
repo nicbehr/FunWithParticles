@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun With Particles</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <button id="menuSwitch">
+        Menu
+    </button>
+    <div id="nav">
+        <div class="menu-item">
+            <button class="toggleSwitch" id="connectionSwitch">Connections</button>
+            <button class="toggleSwitch" id="mouseMoveSwitch">Spawn on mouse move</button>
+        </div>
+        <div class="menu-item">
+            <label for="radius">Max. Particle Radius</label>
+            <input type="number" name="radius" id="radius" value=5>
+        </div>
+        <div class="menu-item">
+            <label for="behaviour-select">Select particle behaviour</label>
+            <select name="magnet" id="behaviour-select">
+                <option value="none">None</option>
+                <option value="Repel">Repel</option>
+                <option value="Attract">Attract</option>
+            </select>
+        </div>
+        <div class="menu-item">
+            <p id="lightSpan" class="hslSlider">Light:
+                <input type="range" min="1" max="100" value="100" class="slider" id="lightRange">
+                <span id="light">100</span>
+            </p>
+        </div>
+        <div class="menu-item">
+            <p id="satSpan" class="hslSlider">Saturation:
+                <input type="range" min="1" max="100" value="100" class="slider" id="satRange">
+                <span id="sat">100</span>
+            </p>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
