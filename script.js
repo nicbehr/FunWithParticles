@@ -25,8 +25,11 @@ let saturation = 100;
 let light = 100;
 let randomMovement = true;
 let particleBehaviour = "none";
-// slider 
 
+
+// getting buttons and sliders
+
+// Slider
 var radiusInput = document.getElementById('radius');
 var radius = radiusInput.value;
 radiusInput.oninput = function () {
@@ -101,6 +104,7 @@ mouseMoveSwitch.addEventListener('click', () => {
     }
 });
 
+// Class to track mouse movement
 
 class Mouse {
     constructor() {
@@ -124,6 +128,7 @@ class Mouse {
 }
 let mouse = new Mouse();
 
+// Class for particles
 
 class Particle {
     constructor(x, y) {
@@ -147,27 +152,37 @@ class Particle {
         }
         this.density = Math.random() * 10 + 1;
     }
-    update() {
 
-        // this.changelight();
-        if (this.radius >= 0.2) this.radius -= 0.03;
+    // running method to move/track particles
+    update() {
 
         // collision with window borders
         if (this.x >= window.innerWidth || this.x <= 1) { this.speedX = this.speedX * -1 };
         if (this.y >= window.innerHeight || this.y <= 1) { this.speedY = this.speedY * -1 };
 
+        // shrink particles over time
+        if (this.radius >= 0.2) this.radius -= 0.03;
+
+        // distance between particle center and mouse
         let dx = this.x - mouse.x;
         let dy = this.y - mouse.y;
-
         let distance = Math.abs(dx) + Math.abs(dy);
+
+        // forcedirection 
         let forceDirectionX = dx / distance;
         let forceDirectionY = dy / distance;
+
+        // max distance for gravity effect, normalized to be 0 to 1
         const maxDistance = 300;
         let force = (maxDistance - distance) / maxDistance;
+        // avoid negative force
         if (force < 0) force = 0;
 
+        // effect of gravity on speed
         this.bumpSpeedX = (forceDirectionX * force * this.density * 0.6);
         this.bumpSpeedY = (forceDirectionY * force * this.density * 0.6);
+
+        // update on positions based on gravity 
         if (distance < mouse.radius + this.radius) {
             if (particleBehaviour === "Repel") {
                 this.x += this.bumpSpeedX;
@@ -184,6 +199,8 @@ class Particle {
         this.x += this.baseSpeedX;
         this.y += this.baseSpeedY;
     }
+
+    // optional strobo-effect (disabled)
     changelight() {
         if (this.light >= 90) {
             this.lightSwitch = false;
@@ -204,6 +221,8 @@ class Particle {
         ctx.fill();
         ctx.closePath();
     }
+
+    // find distance between particles and draw connections if less than 100
     connect() {
         particlesArray.forEach(particle => {
             let distance = Math.abs(this.x - particle.x) + Math.abs(this.y - particle.y);
@@ -220,7 +239,7 @@ class Particle {
     }
 }
 
-// event Listeners
+// event listener for spawning particles
 canvas.addEventListener('click', (event) => {
     for (let i = 0; i < 50; i++) {
         let randomPosOnBumpRadiusX = Math.random() * bumpRadius - (bumpRadius / 2);
@@ -229,6 +248,20 @@ canvas.addEventListener('click', (event) => {
     }
 })
 
+// spawn particles on mouse move
+addEventListener('mousemove', (event) => {
+    evaluateMouseSpeed(event);
+    if (toggleMouseMove == true) {
+        for (let i = 0; i < 2; i++) {
+            let randomPosOnBumpRadiusX = Math.random() * bumpRadius - (bumpRadius / 2);
+            let randomPosOnBumpRadiusY = Math.random() * bumpRadius - (bumpRadius / 2);
+            particlesArray.push(new Particle(event.x + randomPosOnBumpRadiusX, event.y + randomPosOnBumpRadiusY));
+        }
+    }
+})
+
+
+// extra method to evaluate mouse speed to make bounce effect (disabled)
 function evaluateMouseSpeed(event) {
     mouse.x = event.x;
     mouse.y = event.y;
@@ -251,20 +284,6 @@ function evaluateMouseSpeed(event) {
 
 }
 
-addEventListener('mousemove', (event) => {
-    evaluateMouseSpeed(event);
-    if (toggleMouseMove == true) {
-        for (let i = 0; i < 2; i++) {
-            let randomPosOnBumpRadiusX = Math.random() * bumpRadius - (bumpRadius / 2);
-            let randomPosOnBumpRadiusY = Math.random() * bumpRadius - (bumpRadius / 2);
-            particlesArray.push(new Particle(event.x + randomPosOnBumpRadiusX, event.y + randomPosOnBumpRadiusY));
-        }
-    }
-})
-
-function computeMouseVelocity() {
-
-}
 
 // handler and manager
 
