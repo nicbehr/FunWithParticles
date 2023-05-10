@@ -17,7 +17,7 @@ let toggleConnections = false;
 let toggleMagnet = false;
 let toggleMenu = false;
 let toggleMouseMove = false;
-let fps = 60;
+let fps = 25;
 let particlesArray = [];
 let hue = 0;
 let bumpRadius = 30;
@@ -104,7 +104,6 @@ mouseMoveSwitch.addEventListener('click', () => {
 });
 
 // Class to track mouse movement
-
 class Mouse {
     constructor() {
         x: undefined;
@@ -221,8 +220,9 @@ class Particle {
     }
 
     // find distance between particles and draw connections if less than 100
-    connect() {
-        particlesArray.forEach(particle => {
+    connect(i) {
+        for (let j = i; j < particlesArray.length; j++) {
+            const particle = particlesArray[j];
             let distance = Math.abs(this.x - particle.x) + Math.abs(this.y - particle.y);
             if (distance < 100) {
                 ctx.strokeStyle = 'hsl(' + this.hue + ',' + this.saturation + '%,' + this.light + '%)';
@@ -233,7 +233,7 @@ class Particle {
                 ctx.stroke();
                 ctx.closePath();
             }
-        });
+        }
     }
 }
 
@@ -309,7 +309,7 @@ function handleParticles(x, y) {
         particle.update();
         particle.draw(x, y);
         if (toggleConnections == true) {
-            particle.connect();
+            particle.connect(i);
         }
         if (particle.radius <= 0.3) {
             let idx = particlesArray.indexOf(particle);
